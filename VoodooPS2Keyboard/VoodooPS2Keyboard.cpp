@@ -198,6 +198,9 @@ static void logKeySequence(const char* header, UInt16* pAction)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+bool                     _numKeypadLocked;
+
+
 bool ApplePS2Keyboard::init(OSDictionary * dict)
 {
     //
@@ -232,6 +235,7 @@ bool ApplePS2Keyboard::init(OSDictionary * dict)
     _interruptHandlerInstalled = false;
     _ledState                  = 0;
     _lastdata = 0;
+    _numKeypadLocked = true;
     
     _swapcommandoption = false;
     _sleepEjectTimer = 0;
@@ -1571,6 +1575,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
     
     UInt8 extended = packet[0] - 1;
     UInt8 scanCode = packet[1];
+    AbsoluteTime now;
     
 #ifdef DEBUG_VERBOSE
     DEBUG_LOG("%s: PS/2 scancode %s 0x%x\n", getName(),  extended ? "extended" : "", scanCode);
@@ -1683,22 +1688,30 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
             break;
             
         case 0x0153:    // delete
+            
             // check for Ctrl+Alt+Delete? (three finger salute)
             if (checkModifierState(kMaskLeftControl|kMaskLeftAlt))
             {
                 keyCode = 0;
-                if (!goingDown)
+                if (goingDown)
                 {
                     // Note: If OS X thinks the Command and Control keys are down at the time of
                     //  receiving an ADB 0x7f (power button), it will unconditionaly and unsafely
                     //  reboot the computer, much like the old PC/AT Ctrl+Alt+Delete!
                     // That's why we make sure Control (0x3b) and Alt (0x37) are up!!
-                    dispatchKeyboardEventX(0x37, false, now_abs);
-                    dispatchKeyboardEventX(0x3b, false, now_abs);
-                    dispatchKeyboardEventX(0x7f, true, now_abs);
+                    // then map to Ctrl + Command + Q (screen lock)
+                    dispatchKeyboardEventX(0x37, true, now_abs);
+                    dispatchKeyboardEventX(0x3b, true, now_abs);
+                    dispatchKeyboardEventX(0xc, true, now_abs);
                     dispatchKeyboardEventX(0x7f, false, now_abs);
                 }
+                
+                dispatchKeyboardEventX(0x37, false, now_abs);
+                dispatchKeyboardEventX(0x3b, false, now_abs);
+                dispatchKeyboardEventX(0xc, false, now_abs);
+                dispatchKeyboardEventX(0x7f, false, now_abs);
             }
+
             break;
             
         case 0x015f:    // sleep
@@ -1718,8 +1731,28 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
             break;
             
             //REVIEW: this is getting a bit ugly
-        case 0x0128:    // alternate that cannot fnkeys toggle (discrete trackpad toggle)
-        case 0x0137:    // prt sc/sys rq
+//        case 0x0128:    // alternate that cannot fnkeys toggle (discrete trackpad toggle)
+//        case 0x0137:    // prt sc/sys rq
+//        {
+//            unsigned origKeyCode = keyCode;
+//            keyCode = 0;
+//            if (!goingDown)
+//                break;
+//            if (!checkModifierState(kMaskLeftControl))
+//            {
+//                // get current enabled status, and toggle it
+//                bool enabled;
+//                _device->dispatchMouseMessage(kPS2M_getDisableTouchpad, &enabled);
+//                enabled = !enabled;
+//                _device->dispatchMouseMessage(kPS2M_setDisableTouchpad, &enabled);
+//                break;
+//            }
+//            if (origKeyCode != 0x0137)
+//                break; // do not fall through for 0x0128
+//            // fall through
+//        }
+            
+        case 0x011e:    // fn+f5 (Dell precision M4800)
         {
             unsigned origKeyCode = keyCode;
             keyCode = 0;
@@ -1734,10 +1767,11 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
                 _device->dispatchMouseMessage(kPS2M_setDisableTouchpad, &enabled);
                 break;
             }
-            if (origKeyCode != 0x0137)
+            if (origKeyCode != 0x011e)
                 break; // do not fall through for 0x0128
             // fall through
         }
+            
         case 0x0127:    // alternate for fnkeys toggle (discrete fnkeys toggle)
             keyCode = 0;
             if (!goingDown)
@@ -1763,7 +1797,66 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
                 }
             }
             break;
+
+//
+//
+//        case 0x46:    // FN+F3
+//            // FN+F3 >>> Ctrl + Command + Q
+//            keyCode = 0;
+//            if (goingDown)
+//            {
+//                dispatchKeyboardEventX(0x37, true, now_abs);
+//                dispatchKeyboardEventX(0x3b, true, now_abs);
+//                dispatchKeyboardEventX(0xc, true, now_abs);
+//            }
+//
+//            dispatchKeyboardEventX(0x37, false, now_abs);
+//            dispatchKeyboardEventX(0x3b, false, now_abs);
+//            dispatchKeyboardEventX(0xc, false, now_abs);
+//            break;
+
     }
+
+    
+    clock_get_uptime((uint64_t *)&now);
+    
+    //NUM LOCK fix For DELL Precision M4800
+    if(keyCode == 0x45 && goingDown)
+    {
+        setNumLockFeedback(_numKeypadLocked);
+        _numKeypadLocked = !_numKeypadLocked;
+    }
+
+    // remap NUM PAD by NUMLOCK LED status
+    if(!_numKeypadLocked)
+    {
+        _PS2ToADBMap[0x48] = 0x5b;     // 8 up arrow
+        _PS2ToADBMap[0x50] = 0x54;     // 3 down arrow
+        _PS2ToADBMap[0x4B] = 0x56;     // 4 left arrow
+        _PS2ToADBMap[0x4D] = 0x58;     // 6 right arrow
+        _PS2ToADBMap[0x52] = 0x52;     // 0 insert / CDROM inject
+        _PS2ToADBMap[0x53] = 0x41;     // . delete
+        _PS2ToADBMap[0x49] = 0x5c;     // 9 page up
+        _PS2ToADBMap[0x51] = 0x55;     // 3 page down
+        _PS2ToADBMap[0x47] = 0x59;     // 7 home
+        _PS2ToADBMap[0x4F] = 0x53;     // 1 end
+        
+    }
+    else
+    {
+        _PS2ToADBMap[0x48] = 0x7e;      // 8 up arrow
+        _PS2ToADBMap[0x50] = 0x7d;      // 3 down arrow
+        _PS2ToADBMap[0x4B] = 0x7b;      // 4 left arrow
+        _PS2ToADBMap[0x4D] = 0x7c;      // 6 right arrow
+        _PS2ToADBMap[0x52] = 0x92;      // 0 insert / CDROM inject
+        _PS2ToADBMap[0x53] = 0x75;      // . delete
+        _PS2ToADBMap[0x49] = 0x74;      // 9 page up
+        _PS2ToADBMap[0x51] = 0x79;      // 3 page down
+        _PS2ToADBMap[0x47] = 0x73;      // 7 home
+        _PS2ToADBMap[0x4F] = 0x77;      // 1 end
+
+    }
+    
     
 #ifdef DEBUG
     // allow hold Alt+numpad keys to type in arbitrary ADB key code
@@ -1893,6 +1986,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 #endif
     
     return true;
+
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1981,8 +2075,7 @@ void ApplePS2Keyboard::setNumLockFeedback(bool locked)
     // It is safe to issue this request from the interrupt/completion context.
     //
     
-    _ledState = locked ? (_ledState | kLED_NumLock):(_ledState & ~kLED_NumLock);
-    setLEDs(_ledState);
+    _ledState = locked ? (_ledState | kLED_NumLock):(_ledState & ~kLED_NumLock);    setLEDs(_ledState);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2365,5 +2458,22 @@ void ApplePS2Keyboard::initKeyboard()
     // Enable keyboard Kscan -> scan code translation mode.
     //
     _device->setCommandByte(kCB_TranslateMode, 0);
+    
 }
 
+////sending Command+Option+P+Q for 15s to avoid touchpad frozen at system startup
+//unsigned int sleep(unsigned int seconds);
+//uint64_t now_abs;
+//clock_get_uptime(&now_abs);
+//
+//dispatchKeyboardEventX(0x37, true, now_abs);
+//dispatchKeyboardEventX(0x3a, true, now_abs);
+//dispatchKeyboardEventX(0x23, true, now_abs);
+//dispatchKeyboardEventX(0xf, true, now_abs);
+//
+//sleep(15);
+//
+//dispatchKeyboardEventX(0x37, false, now_abs);
+//dispatchKeyboardEventX(0x3a, false, now_abs);
+//dispatchKeyboardEventX(0x23, false, now_abs);
+//dispatchKeyboardEventX(0xf, false, now_abs);
