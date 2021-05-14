@@ -1575,7 +1575,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
     
     UInt8 extended = packet[0] - 1;
     UInt8 scanCode = packet[1];
-    AbsoluteTime now;
+//    AbsoluteTime now;
     
 #ifdef DEBUG_VERBOSE
     DEBUG_LOG("%s: PS/2 scancode %s 0x%x\n", getName(),  extended ? "extended" : "", scanCode);
@@ -1797,66 +1797,50 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
                 }
             }
             break;
+            
+        case 0x45:  //num lock remapping
+            keyCode = 0;
+//            clock_get_uptime((uint64_t *)&now);
+            
+            //NUM LOCK fix For DELL Precision M4800
+            if(goingDown)
+            {
+                setNumLockFeedback(_numKeypadLocked);
+                _numKeypadLocked = !_numKeypadLocked;
+            }
 
-//
-//
-//        case 0x46:    // FN+F3
-//            // FN+F3 >>> Ctrl + Command + Q
-//            keyCode = 0;
-//            if (goingDown)
-//            {
-//                dispatchKeyboardEventX(0x37, true, now_abs);
-//                dispatchKeyboardEventX(0x3b, true, now_abs);
-//                dispatchKeyboardEventX(0xc, true, now_abs);
-//            }
-//
-//            dispatchKeyboardEventX(0x37, false, now_abs);
-//            dispatchKeyboardEventX(0x3b, false, now_abs);
-//            dispatchKeyboardEventX(0xc, false, now_abs);
-//            break;
+            // remap NUM PAD by NUMLOCK LED status
+            if(!_numKeypadLocked)
+            {
+                _PS2ToADBMap[0x48] = 0x5b;     // 8 up arrow
+                _PS2ToADBMap[0x50] = 0x54;     // 3 down arrow
+                _PS2ToADBMap[0x4B] = 0x56;     // 4 left arrow
+                _PS2ToADBMap[0x4D] = 0x58;     // 6 right arrow
+                _PS2ToADBMap[0x52] = 0x52;     // 0 insert / CDROM inject
+                _PS2ToADBMap[0x53] = 0x41;     // . delete
+                _PS2ToADBMap[0x49] = 0x5c;     // 9 page up
+                _PS2ToADBMap[0x51] = 0x55;     // 3 page down
+                _PS2ToADBMap[0x47] = 0x59;     // 7 home
+                _PS2ToADBMap[0x4F] = 0x53;     // 1 end
+                
+            }
+            else
+            {
+                _PS2ToADBMap[0x48] = 0x7e;      // 8 up arrow
+                _PS2ToADBMap[0x50] = 0x7d;      // 3 down arrow
+                _PS2ToADBMap[0x4B] = 0x7b;      // 4 left arrow
+                _PS2ToADBMap[0x4D] = 0x7c;      // 6 right arrow
+                _PS2ToADBMap[0x52] = 0x92;      // 0 insert / CDROM inject
+                _PS2ToADBMap[0x53] = 0x75;      // . delete
+                _PS2ToADBMap[0x49] = 0x74;      // 9 page up
+                _PS2ToADBMap[0x51] = 0x79;      // 3 page down
+                _PS2ToADBMap[0x47] = 0x73;      // 7 home
+                _PS2ToADBMap[0x4F] = 0x77;      // 1 end
 
+            }
+            break;
     }
 
-    
-    clock_get_uptime((uint64_t *)&now);
-    
-    //NUM LOCK fix For DELL Precision M4800
-    if(keyCode == 0x45 && goingDown)
-    {
-        setNumLockFeedback(_numKeypadLocked);
-        _numKeypadLocked = !_numKeypadLocked;
-    }
-
-    // remap NUM PAD by NUMLOCK LED status
-    if(!_numKeypadLocked)
-    {
-        _PS2ToADBMap[0x48] = 0x5b;     // 8 up arrow
-        _PS2ToADBMap[0x50] = 0x54;     // 3 down arrow
-        _PS2ToADBMap[0x4B] = 0x56;     // 4 left arrow
-        _PS2ToADBMap[0x4D] = 0x58;     // 6 right arrow
-        _PS2ToADBMap[0x52] = 0x52;     // 0 insert / CDROM inject
-        _PS2ToADBMap[0x53] = 0x41;     // . delete
-        _PS2ToADBMap[0x49] = 0x5c;     // 9 page up
-        _PS2ToADBMap[0x51] = 0x55;     // 3 page down
-        _PS2ToADBMap[0x47] = 0x59;     // 7 home
-        _PS2ToADBMap[0x4F] = 0x53;     // 1 end
-        
-    }
-    else
-    {
-        _PS2ToADBMap[0x48] = 0x7e;      // 8 up arrow
-        _PS2ToADBMap[0x50] = 0x7d;      // 3 down arrow
-        _PS2ToADBMap[0x4B] = 0x7b;      // 4 left arrow
-        _PS2ToADBMap[0x4D] = 0x7c;      // 6 right arrow
-        _PS2ToADBMap[0x52] = 0x92;      // 0 insert / CDROM inject
-        _PS2ToADBMap[0x53] = 0x75;      // . delete
-        _PS2ToADBMap[0x49] = 0x74;      // 9 page up
-        _PS2ToADBMap[0x51] = 0x79;      // 3 page down
-        _PS2ToADBMap[0x47] = 0x73;      // 7 home
-        _PS2ToADBMap[0x4F] = 0x77;      // 1 end
-
-    }
-    
     
 #ifdef DEBUG
     // allow hold Alt+numpad keys to type in arbitrary ADB key code
@@ -2433,11 +2417,14 @@ void ApplePS2Keyboard::initKeyboard()
     // start out with all keys up
     bzero(_keyBitVector, sizeof(_keyBitVector));
     _PS2modifierState = 0;
+
+    // initial NumLock Status
+    setNumLockFeedback(_numKeypadLocked);
     
     //
     // Initialize the keyboard LED state.
     //
-    
+
     setLEDs(_ledState);
     
     //

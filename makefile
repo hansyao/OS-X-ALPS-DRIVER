@@ -1,9 +1,9 @@
 # really just some handy scripts...
 
-DIST=RehabMan-Voodoo
+DIST=badfellow-Voodoo
 INSTDIR=/System/Library/Extensions
 KEXT=VoodooPS2Controller.kext
-DELIVERYDIR=./Delivery
+DELIVERYDIR=./Derived
 
 ifeq ($(findstring 32,$(BITS)),32)
 OPTIONS:=$(OPTIONS) -arch i386
@@ -85,21 +85,21 @@ install.sh: makefile
 
 .PHONY: distribute
 distribute:
-	if [ -e ./Distribute ]; then rm -r ./Distribute; fi
-	mkdir ./Distribute
-	cp -RL ./Build/Products/ ./Distribute
-	find ./Distribute -path *.DS_Store -delete
-	find ./Distribute -path *.dSYM -exec echo rm -r {} \; >/tmp/org.voodoo.rm.dsym.sh
+	if [ -e ./$(DELIVERYDIR) ]; then rm -r ./$(DELIVERYDIR); fi
+	mkdir ./$(DELIVERYDIR)
+	cp -RL ./Build/Products/ ./$(DELIVERYDIR)
+	find ./$(DELIVERYDIR) -path *.DS_Store -delete
+	find ./$(DELIVERYDIR) -path *.dSYM -exec echo rm -r {} \; >/tmp/org.voodoo.rm.dsym.sh
 	chmod +x /tmp/org.voodoo.rm.dsym.sh
 	/tmp/org.voodoo.rm.dsym.sh
 	rm -Rf /tmp/org.voodoo.rm.dsym.sh
 #	cp ./VoodooPS2Daemon/org.rehabman.voodoo.driver.Daemon.plist ./Distribute/
-	rm -Rf ./Distribute/Debug/VoodooPS2synapticsPane.prefPane
-	rm -Rf ./Distribute/Release/VoodooPS2synapticsPane.prefPane
-	rm -Rf ./Distribute/Debug/synapticsconfigload
-	rm -Rf ./Distribute/Release/synapticsconfigload
-	ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./Distribute ./Archive.zip
-	mv ./Archive.zip ./Distribute/`date +$(DIST)-%Y-%m%d.zip`
+	rm -Rf ./$(DELIVERYDIR)/Debug/VoodooPS2synapticsPane.prefPane
+	rm -Rf ./$(DELIVERYDIR)/Release/VoodooPS2synapticsPane.prefPane
+	rm -Rf ./$(DELIVERYDIR)/Debug/synapticsconfigload
+	rm -Rf ./$(DELIVERYDIR)/Release/synapticsconfigload
+	ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./$(DELIVERYDIR) ./Archive.zip
+	mv ./Archive.zip ./$(DELIVERYDIR)/`date +$(DIST)-%Y-%m%d.zip`
 	
 
 
