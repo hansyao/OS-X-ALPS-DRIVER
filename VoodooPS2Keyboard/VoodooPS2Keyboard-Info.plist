@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>6.1</string>
 	<key>CFBundleName</key>
 	<string>Voodoo PS/2 Keyboard</string>
 	<key>CFBundlePackageType</key>
@@ -108,6 +108,8 @@
 							<string>58=58</string>
 						</array>
 					</dict>
+					<key>HSW-LPT</key>
+					<string>Dell-Keys</string>
 					<key>M4800</key>
 					<dict>
 						<key>Breakless PS2</key>
@@ -186,8 +188,6 @@
 							<string>58=58</string>
 						</array>
 					</dict>
-					<key>HSW-LPT</key>
-					<string>Dell-Keys</string>
 					<key>SNB-CPT</key>
 					<dict>
 						<key>ActionSwipeDown</key>
@@ -274,9 +274,15 @@
 						<array>
 							<string>;This section maps ps2 codes (packet format) received quickly (macros) into fake ps2 codes (packet format)</string>
 							<string>;Fn+F1</string>
-							<data>//8CbgAAAAACWwEZ</data>
-							<data>//8C7gAAAAAC2wGZ</data>
-							<data>//8C7gAAAAABmQLb</data>
+							<data>
+							//8CbgAAAAACWwEZ
+							</data>
+							<data>
+							//8C7gAAAAAC2wGZ
+							</data>
+							<data>
+							//8C7gAAAAABmQLb
+							</data>
 						</array>
 						<key>MaximumMacroTime</key>
 						<integer>35000000</integer>
@@ -705,23 +711,47 @@
 						<array>
 							<string>;This section maps ps2 codes (packet format) received quickly (macros) into fake ps2 codes (packet format)</string>
 							<string>;Fn+F4</string>
-							<data>//8CZAAAAAABOAE+</data>
-							<data>//8C5AAAAAABvgG4</data>
+							<data>
+							//8CZAAAAAABOAE+
+							</data>
+							<data>
+							//8C5AAAAAABvgG4
+							</data>
 							<string>;F5 (without Fn)</string>
-							<data>//8CZQEAAAABPw==</data>
-							<data>//8C5QEAAAABvw==</data>
+							<data>
+							//8CZQEAAAABPw==
+							</data>
+							<data>
+							//8C5QEAAAABvw==
+							</data>
 							<string>;Fn+Ctrl+F6</string>
-							<data>//8CJwAD//8CZg==</data>
-							<data>//8CpwAD//8C5g==</data>
+							<data>
+							//8CJwAD//8CZg==
+							</data>
+							<data>
+							//8CpwAD//8C5g==
+							</data>
 							<string>;Ctrl+F6</string>
-							<data>//8CJwAD//8CQA==</data>
-							<data>//8CpwAD//8CwA==</data>
+							<data>
+							//8CJwAD//8CQA==
+							</data>
+							<data>
+							//8CpwAD//8CwA==
+							</data>
 							<string>;Fn+F8</string>
-							<data>//8CaAAAAAACHQE4AQ8=</data>
-							<data>//8C6AAAAAABjwG4Ap0=</data>
+							<data>
+							//8CaAAAAAACHQE4AQ8=
+							</data>
+							<data>
+							//8C6AAAAAABjwG4Ap0=
+							</data>
 							<string>;Fn+F10</string>
-							<data>//8CagAAAAACWwEZ</data>
-							<data>//8C6gAAAAABmQLb</data>
+							<data>
+							//8CagAAAAACWwEZ
+							</data>
+							<data>
+							//8C6gAAAAABmQLb
+							</data>
 						</array>
 						<key>Macro Translation</key>
 						<array>
