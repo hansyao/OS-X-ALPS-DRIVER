@@ -1813,7 +1813,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
             if(!_numKeypadLocked)
             {
                 _PS2ToADBMap[0x48] = 0x5b;     // 8 up arrow
-                _PS2ToADBMap[0x50] = 0x54;     // 3 down arrow
+                _PS2ToADBMap[0x50] = 0x54;     // 2 down arrow
                 _PS2ToADBMap[0x4B] = 0x56;     // 4 left arrow
                 _PS2ToADBMap[0x4D] = 0x58;     // 6 right arrow
                 _PS2ToADBMap[0x52] = 0x52;     // 0 insert / CDROM inject
@@ -1827,7 +1827,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
             else
             {
                 _PS2ToADBMap[0x48] = 0x7e;      // 8 up arrow
-                _PS2ToADBMap[0x50] = 0x7d;      // 3 down arrow
+                _PS2ToADBMap[0x50] = 0x7d;      // 2 down arrow
                 _PS2ToADBMap[0x4B] = 0x7b;      // 4 left arrow
                 _PS2ToADBMap[0x4D] = 0x7c;      // 6 right arrow
                 _PS2ToADBMap[0x52] = 0x92;      // 0 insert / CDROM inject
