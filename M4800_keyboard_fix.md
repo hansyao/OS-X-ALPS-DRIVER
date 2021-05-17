@@ -240,7 +240,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 第三步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将<kbd>SysRq</kbd>和<kbd>PrntScrn</kbd>映射到<kbd>F13</kbd>
 
 ```
-e037=69;fn+Home/End to F13
+<string>e037=69;fn+Home/End to F13</string>
 ```
 第四步: 编译打包，将生成的**ApplePS2Controller.kext**复制到`/EFI/OC/Kexts/`替换掉原来的文件，重启。打开系统偏好设置>键盘>快捷键, 将截屏映射到<kbd>SysRq</kbd>/<kbd>PrntScrn</kbd>（<kbd>F13</kbd>）。
 
@@ -251,7 +251,9 @@ e037=69;fn+Home/End to F13
 第一步: 先在终端下运行`./ioio_debug.sh`，点按<kbd>Fn</kbd>+<kbd>Insert</kbd>得到PS2键位码为 **[e045]**
 
 第二步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将<kbd>Pause</kbd>(<kbd>Fn</kbd>+<kbd>Insert</kbd>)映射到<kbd>F18</kbd>。
-
+```
+<string>e045=4f;fn+insert to F18</string>
+```
 第三步: 重复 **步骤五** >第四步 将<kbd>Pause</kbd>(<kbd>Fn</kbd>+<kbd>Insert</kbd>)映射到你需要的功能键。
 
 
@@ -262,7 +264,9 @@ e037=69;fn+Home/End to F13
 第一步: 先在终端下运行`./ioio_debug.sh`，点按<kbd>Fn</kbd>+<kbd>Insert</kbd>得到PS2键位码为 **[e021]**
 
 第二步: 在`VoodooPS2Keyboard-Info.plist`的Custom ADB Map中加入以下映射将<kbd>Calc</kbd>映射到<kbd>F19</kbd>。
-
+```
+<string>e021=50;Calc to F19</string>
+```
 第三步: 编译打包，将生成的**ApplePS2Controller.kext**复制到`/EFI/OC/Kexts/`替换掉原来的文件，重启
 
 第四步：用`MacOS`字带的工具`自动操作`将<kbd>Calc</kbd>(<kbd>F19</kbd>)映射到计算器app。
