@@ -1,4 +1,4 @@
-# Dell Precision M4800 VoodoPS2Controller 键盘/触控驱动修复过程
+# Dell Precision M4800 VoodooPS2Controller 键盘/触控驱动修复过程
 
 ## 前言
 对于**Dell Precision M4800**来说，触控板是**ALPS**，如果直接使用2017年2月发布的 [DrHurt](https://github.com/DrHurt) 版本的[VoodooPS2Controller](https://github.com/DrHurt/OS-X-ALPS-DRIVER)有以下bug:
@@ -282,7 +282,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
     // handle special cases
     switch (keyCode)
     {
-
+        // .......   
         case 0x0153:    // delete
             
             // check for Ctrl+Alt+Delete? (three finger salute)
