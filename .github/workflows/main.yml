@@ -26,7 +26,6 @@ jobs:
         run: |
           src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
       - run: xcodebuild -jobs 1 -configuration Release -arch x86_64
-      - name: distribute
         run: |
         	if [ -e ./Delivered ]; then rm -r ./Delivered; fi
           mkdir ./Delivered
