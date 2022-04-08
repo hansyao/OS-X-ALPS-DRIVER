@@ -30,7 +30,7 @@ jobs:
         run: |
           if [ -e ./Delivered ]; then rm -r ./Delivered; fi
           mkdir ./Delivered
-          cp -RL ./Build/release/ ./Delivered
+          cp -RL ./Build/UninstalledProducts/macosx/ ./Delivered
           find ./Delivered -path *.DS_Store -delete
           find ./Delivered -path *.dSYM -exec echo rm -r {} \; >/tmp/org.voodoo.rm.dsym.sh
           chmod +x /tmp/org.voodoo.rm.dsym.sh
