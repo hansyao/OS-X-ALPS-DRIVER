@@ -1,0 +1,11 @@
+.DS_Store
+*.zlib
+*.md5
+build
+.svace-dir
+cov-int
+/MacKernelSDK
+.gitignore
+Derived/
+Distribute/
+logs/
