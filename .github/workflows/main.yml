@@ -25,9 +25,7 @@ jobs:
       - name: CI Bootstrap
         run: |
           src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
-      # - run: xcodebuild -jobs 1 -configuration Debug -arch x86_64
       - run: xcodebuild -jobs 1 -configuration Release -arch x86_64
-
       - name: distribute
         run: |
         	if [ -e ./Delivered ]; then rm -r ./Delivered; fi
@@ -43,13 +41,12 @@ jobs:
           rm -Rf ./Delivered/Debug/synapticsconfigload
           rm -Rf ./Delivered/Release/synapticsconfigload
           ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./Delivered ./Archive.zip
-          mv ./Archive.zip ./Delivered/`date +$(DIST)-%Y-%m%d.zip`
-
+          mv ./Archive.zip ./Delivered/`date +hansyao-Voodoo-%Y-%m%d.zip`
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
-          path: ./Delivered/`date +$(DIST)-%Y-%m%d.zip`
+          path: ./Delivered/`date +hansyao-Voodoo-%Y-%m%d.zip`
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@e74ff71f7d8a4c4745b560a485cc5fdb9b5b999d
