@@ -1575,7 +1575,6 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
     
     UInt8 extended = packet[0] - 1;
     UInt8 scanCode = packet[1];
-//    AbsoluteTime now;
     
 #ifdef DEBUG_VERBOSE
     DEBUG_LOG("%s: PS/2 scancode %s 0x%x\n", getName(),  extended ? "extended" : "", scanCode);
@@ -1688,7 +1687,6 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
             break;
             
         case 0x0153:    // delete
-            
             // check for Ctrl+Alt+Delete? (three finger salute)
             if (checkModifierState(kMaskLeftControl|kMaskLeftAlt))
             {
@@ -1771,7 +1769,6 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
                 break; // do not fall through for 0x0128
             // fall through
         }
-            
         case 0x0127:    // alternate for fnkeys toggle (discrete fnkeys toggle)
             keyCode = 0;
             if (!goingDown)
@@ -1822,7 +1819,7 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
                 _PS2ToADBMap[0x51] = 0x55;     // 3 page down
                 _PS2ToADBMap[0x47] = 0x59;     // 7 home
                 _PS2ToADBMap[0x4F] = 0x53;     // 1 end
-                
+
             }
             else
             {
@@ -1840,7 +1837,6 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
             }
             break;
     }
-
     
 #ifdef DEBUG
     // allow hold Alt+numpad keys to type in arbitrary ADB key code
@@ -1970,7 +1966,6 @@ bool ApplePS2Keyboard::dispatchKeyboardEventWithPacket(const UInt8* packet)
 #endif
     
     return true;
-
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2059,7 +2054,8 @@ void ApplePS2Keyboard::setNumLockFeedback(bool locked)
     // It is safe to issue this request from the interrupt/completion context.
     //
     
-    _ledState = locked ? (_ledState | kLED_NumLock):(_ledState & ~kLED_NumLock);    setLEDs(_ledState);
+    _ledState = locked ? (_ledState | kLED_NumLock):(_ledState & ~kLED_NumLock);
+    setLEDs(_ledState);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2424,7 +2420,7 @@ void ApplePS2Keyboard::initKeyboard()
     //
     // Initialize the keyboard LED state.
     //
-
+    
     setLEDs(_ledState);
     
     //
@@ -2445,22 +2441,5 @@ void ApplePS2Keyboard::initKeyboard()
     // Enable keyboard Kscan -> scan code translation mode.
     //
     _device->setCommandByte(kCB_TranslateMode, 0);
-    
 }
 
-////sending Command+Option+P+Q for 15s to avoid touchpad frozen at system startup
-//unsigned int sleep(unsigned int seconds);
-//uint64_t now_abs;
-//clock_get_uptime(&now_abs);
-//
-//dispatchKeyboardEventX(0x37, true, now_abs);
-//dispatchKeyboardEventX(0x3a, true, now_abs);
-//dispatchKeyboardEventX(0x23, true, now_abs);
-//dispatchKeyboardEventX(0xf, true, now_abs);
-//
-//sleep(15);
-//
-//dispatchKeyboardEventX(0x37, false, now_abs);
-//dispatchKeyboardEventX(0x3a, false, now_abs);
-//dispatchKeyboardEventX(0x23, false, now_abs);
-//dispatchKeyboardEventX(0xf, false, now_abs);

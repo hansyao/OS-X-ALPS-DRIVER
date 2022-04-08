@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.1</string>
+	<string>6.2</string>
 	<key>CFBundleName</key>
 	<string>Voodoo PS/2 Keyboard</string>
 	<key>CFBundlePackageType</key>
@@ -306,7 +306,7 @@
 						<array>
 							<string>e01b=70</string>
 							<string>e06e=83</string>
-							<string>e005=6b</string>
+                                                        <string>e005=6b</string>
 							<string>e006=71</string>
 						</array>
 						<key>Custom PS2 Map</key>
@@ -800,6 +800,6 @@
 	<key>OSBundleRequired</key>
 	<string>Console</string>
 	<key>Source Code</key>
-	<string>https://github.com/RehabMan/OS-X-Voodoo-PS2-Controller</string>
+	<string>https://github.com/hansyao/OS-X-ALPS-DRIVER</string>
 </dict>
 </plist>

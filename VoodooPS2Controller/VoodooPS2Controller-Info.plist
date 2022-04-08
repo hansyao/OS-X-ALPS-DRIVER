@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.1</string>
+	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>Voodoo PS/2 Controller</string>
 	<key>CFBundlePackageType</key>
@@ -57,10 +57,10 @@
 			<dict>
 				<key>Default</key>
 				<dict>
-					<key>MouseWakeFirst</key>
-					<true/>
 					<key>WakeDelay</key>
 					<integer>10</integer>
+					<key>MouseWakeFirst</key>
+					<true/>
 				</dict>
 				<key>HPQOEM</key>
 				<dict>

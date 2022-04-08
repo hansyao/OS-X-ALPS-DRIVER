@@ -286,24 +286,18 @@ bool ApplePS2Controller::init(OSDictionary* dict)
     IOLog("offsetof(TPS2Request<1>,commands): %lu\n", offsetof(TPS2Request<1>, commands));
 #endif
     // verify that compiler is working correctly wrt PS2Request/TPS2Request
-
-    // verify that compiler is working correctly wrt PS2Request/TPS2Request
-     static_assert(sizeof(PS2Request) == sizeof(TPS2Request<0>), "Invalid PS2Request size");
-     static_assert(offsetof(PS2Request,commands) == offsetof(TPS2Request<>,commands), "Invalid PS2Request commands offset");
-
-    
-//    if (sizeof(PS2Request) != sizeof(TPS2Request<0>))
-//    {
-//        IOLog("ApplePS2Controller::init: PS2Request size mismatch (%lu != %lu)\n",
-//              sizeof(PS2Request), sizeof(TPS2Request<0>));
-//        return false;
-//    }
-//    if (offsetof(PS2Request,commands) != offsetof(TPS2Request<>,commands))
-//    {
-//        IOLog("ApplePS2Controller::init: PS2Request.commands offset mismatch (%lu != %lu)\n",
-//              offsetof(PS2Request,commands), offsetof(PS2Request,commands));
-//        return false;
-//    }
+    if (sizeof(PS2Request) != sizeof(TPS2Request<0>))
+    {
+        IOLog("ApplePS2Controller::init: PS2Request size mismatch (%lu != %lu)\n",
+              sizeof(PS2Request), sizeof(TPS2Request<0>));
+        return false;
+    }
+    if (offsetof(PS2Request,commands) != offsetof(TPS2Request<>,commands))
+    {
+        IOLog("ApplePS2Controller::init: PS2Request.commands offset mismatch (%lu != %lu)\n",
+              offsetof(PS2Request,commands), offsetof(PS2Request,commands));
+        return false;
+    }
     
     // find config specific to Platform Profile
     OSDictionary* list = OSDynamicCast(OSDictionary, dict->getObject(kPlatformProfile));
@@ -1286,7 +1280,7 @@ UInt8 ApplePS2Controller::readDataPort(PS2DeviceType deviceType)
     //
     
     UInt8  readByte;
-    UInt8  status = '\0';
+    UInt8  status;
     UInt32 timeoutCounter = 10000;    // (timeoutCounter * kDataDelay = 70 ms)
     
     while (1)
@@ -1408,7 +1402,7 @@ UInt8 ApplePS2Controller::readDataPort(PS2DeviceType deviceType,
     bool   firstByteHeld = false;
     UInt8  readByte;
     bool   requestedStream;
-    UInt8  status = '\0';
+    UInt8  status;
     UInt32 timeoutCounter = 10000;    // (timeoutCounter * kDataDelay = 70 ms)
     
     while (1)

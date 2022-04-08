@@ -9,7 +9,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.1</string>
+	<string>6.2</string>
 	<key>CFBundleName</key>
 	<string>Voodoo PS/2 Trackpad</string>
 	<key>CFBundlePackageType</key>
@@ -24,10 +24,24 @@
 	<dict>
 		<key>ALPS TouchPad</key>
 		<dict>
-			<key>ApplePreferenceCapability</key>
+			<key>SupportsGestureScrolling</key>
 			<true/>
+			<key>TrackpadFourFingerGestures</key>
+			<false/>
 			<key>ApplePreferenceIdentifier</key>
 			<string>com.apple.AppleMultitouchTrackpad</string>
+			<key>MTHIDDevice</key>
+			<true/>
+			<key>MT Built-in</key>
+			<true/>
+			<key>ApplePreferenceCapability</key>
+			<true/>
+			<key>TrackpadEmbedded</key>
+			<true/>
+			<key>TrackpadThreeFingerDrag</key>
+			<false/>
+			<key>TrackpadSecondaryClickCorners</key>
+			<true/>
 			<key>CFBundleIdentifier</key>
 			<string>org.rehabman.voodoo.driver.PS2Trackpad</string>
 			<key>IOClass</key>
@@ -36,10 +50,6 @@
 			<integer>6000</integer>
 			<key>IOProviderClass</key>
 			<string>ApplePS2MouseDevice</string>
-			<key>MT Built-in</key>
-			<true/>
-			<key>MTHIDDevice</key>
-			<true/>
 			<key>Platform Profile</key>
 			<dict>
 				<key>Default</key>
@@ -64,8 +74,6 @@
 					<integer>5</integer>
 					<key>DivisorY</key>
 					<integer>5</integer>
-					<key>DoubleSmoothness</key>
-					<true/>
 					<key>DoubleTapThresholdX</key>
 					<integer>100</integer>
 					<key>DoubleTapThresholdY</key>
@@ -74,6 +82,8 @@
 					<integer>1000000000</integer>
 					<key>DragLockTempMask</key>
 					<integer>1048592</integer>
+					<key>DoubleSmoothness</key>
+					<true/>
 					<key>EdgeBottom</key>
 					<integer>500</integer>
 					<key>EdgeLeft</key>
@@ -162,16 +172,6 @@
 			</dict>
 			<key>ProductID</key>
 			<integer>547</integer>
-			<key>SupportsGestureScrolling</key>
-			<true/>
-			<key>TrackpadEmbedded</key>
-			<true/>
-			<key>TrackpadFourFingerGestures</key>
-			<false/>
-			<key>TrackpadSecondaryClickCorners</key>
-			<true/>
-			<key>TrackpadThreeFingerDrag</key>
-			<false/>
 			<key>VendorID</key>
 			<integer>1452</integer>
 		</dict>
@@ -192,6 +192,6 @@
 	<key>OSBundleRequired</key>
 	<string>Console</string>
 	<key>Source Code</key>
-	<string>https://github.com/RehabMan/OS-X-Voodoo-PS2-Controller</string>
+	<string>https://github.com/hansyao/OS-X-ALPS-DRIVER</string>
 </dict>
 </plist>

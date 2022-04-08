@@ -1,6 +1,6 @@
 # really just some handy scripts...
 
-DIST=badfellow-Voodoo
+DIST=hansyao-Voodoo
 INSTDIR=/System/Library/Extensions
 KEXT=VoodooPS2Controller.kext
 DELIVERYDIR=./Derived
