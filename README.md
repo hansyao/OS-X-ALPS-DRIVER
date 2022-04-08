@@ -8,7 +8,7 @@ Optimized for Dell Precision M4800
 
 Driver Features:
 - Supports ALPS hardware versions V1-V5, V7, V8
-- Supports Mac OS to 11.2
+- Supports Mac OS to 12.3
 - 1-finger tapping.
 - Side (edge) scrolling (Vertical with inertia, and Horizontal).
 - 2-finger tap for right click.
