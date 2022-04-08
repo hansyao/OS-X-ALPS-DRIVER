@@ -28,7 +28,7 @@ jobs:
           xcodebuild -jobs 1 -configuration Release -arch x86_64
       - name: release
         run: |
-        	if [ -e ./Delivered ]; then rm -r ./Delivered; fi
+          if [ -e ./Delivered ]; then rm -r ./Delivered; fi
           mkdir ./Delivered
           cp -RL ./Build/release/ ./Delivered
           find ./Delivered -path *.DS_Store -delete
