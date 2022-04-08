@@ -22,25 +22,12 @@ jobs:
         with:
           repository: acidanthera/MacKernelSDK
           path: MacKernelSDK
-      - name: CI Bootstrap
+      - name: 编译
         run: |
-          src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
-          xcodebuild -jobs 1 -configuration Release -arch x86_64
-      - name: release
-        run: |
-          if [ -e ./Delivered ]; then rm -r ./Delivered; fi
-          mkdir ./Delivered
-          cp -RL ./Build/UninstalledProducts/macosx/ ./Delivered
-          find ./Delivered -path *.DS_Store -delete
-          find ./Delivered -path *.dSYM -exec echo rm -r {} \; >/tmp/org.voodoo.rm.dsym.sh
-          chmod +x /tmp/org.voodoo.rm.dsym.sh
-          /tmp/org.voodoo.rm.dsym.sh
-          rm -Rf /tmp/org.voodoo.rm.dsym.sh
-          rm -Rf ./Delivered/Debug/VoodooPS2synapticsPane.prefPane
-          rm -Rf ./Delivered/Release/VoodooPS2synapticsPane.prefPane
-          rm -Rf ./Delivered/Debug/synapticsconfigload
-          rm -Rf ./Delivered/Release/synapticsconfigload
-          ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./Delivered ./artifact.zip
+          mv VoodooPS2Controller.xcodeproj/xcuserdata/hans.xcuserdatad VoodooPS2Controller.xcodeproj/xcuserdata/${USER}.xcuserdatad
+          mv VoodooPS2Controller.xcodeproj/project.xcworkspace/xcuserdata/hans.xcuserdatad VoodooPS2Controller.xcodeproj/project.xcworkspace/xcuserdata/${USER}.xcuserdatad
+          make all
+          make distribute
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v2
         with:

@@ -98,8 +98,8 @@ distribute:
 	rm -Rf ./$(DELIVERYDIR)/Release/VoodooPS2synapticsPane.prefPane
 	rm -Rf ./$(DELIVERYDIR)/Debug/synapticsconfigload
 	rm -Rf ./$(DELIVERYDIR)/Release/synapticsconfigload
-	ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./$(DELIVERYDIR) ./Archive.zip
-	mv ./Archive.zip ./$(DELIVERYDIR)/`date +$(DIST)-%Y-%m%d.zip`
+	ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./$(DELIVERYDIR) ./Artifacts.zip
+	cp ./Artifacts.zip ./$(DELIVERYDIR)/`date +$(DIST)-%Y-%m%d.zip`
 	
 
 
