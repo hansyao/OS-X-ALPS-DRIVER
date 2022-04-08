@@ -40,13 +40,12 @@ jobs:
           rm -Rf ./Delivered/Release/VoodooPS2synapticsPane.prefPane
           rm -Rf ./Delivered/Debug/synapticsconfigload
           rm -Rf ./Delivered/Release/synapticsconfigload
-          ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./Delivered ./Archive.zip
-          mv ./Archive.zip ./Delivered/`date +hansyao-Voodoo-%Y-%m%d.zip`
+          ditto -c -k --sequesterRsrc --zlibCompressionLevel 9 ./Delivered ./artifact.zip
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
-          path: ./Delivered/`date +hansyao-Voodoo-%Y-%m%d.zip`
+          path: ./artifact.zip
       - name: Upload to Release
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@e74ff71f7d8a4c4745b560a485cc5fdb9b5b999d
