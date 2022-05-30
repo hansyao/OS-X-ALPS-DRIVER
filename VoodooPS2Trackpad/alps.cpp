@@ -2426,7 +2426,7 @@ bool ALPS::ps2_command(unsigned char value, UInt8 command)
     if (request.commandsCount != 2) {
         return false;
     }
-    //return request.commandsCount = cmdCount;
+    return request.commandsCount = cmdCount;
 }
 
 bool ALPS::ps2_command_short(UInt8 command)
@@ -2443,7 +2443,7 @@ bool ALPS::ps2_command_short(UInt8 command)
     if (request.commandsCount != 1) {
         return false;
     }
-    //return request.commandsCount = cmdCount;
+    return request.commandsCount = cmdCount;
 }
 
 void ALPS::set_protocol() {
